@@ -1,0 +1,44 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+
+
+    <changeSet id="2023_07_04_create_tables_sec" author="nazymkazizmurat">
+        <sqlFile
+                dbms="mysql"
+                endDelimiter=";"
+                path="db/changelog/changes/2023_07_04_create_tables_sec.sql"
+                relativeToChangelogFile="false"
+                stripComments="true"
+                splitStatements="true"
+        />
+    </changeSet>
+
+    <changeSet id="2023_07_04_insert_tables_sec" author="nazymkazizmurat">
+        <sqlFile
+                dbms="mysql"
+                endDelimiter=";"
+                path="db/changelog/changes/2023_07_04_insert_tables_sec.sql"
+                relativeToChangelogFile="false"
+                stripComments="true"
+                splitStatements="true"
+        />
+    </changeSet>
+
+
+    <changeSet id="2023_07_08_create_tables_client" author="nazymkazizmurat">
+        <sqlFile
+                dbms="mysql"
+                endDelimiter=";"
+                path="db/changelog/changes/2023_07_08_create_tables_client.sql"
+                relativeToChangelogFile="false"
+                stripComments="true"
+                splitStatements="true"
+        />
+    </changeSet>
+
+
+
+</databaseChangeLog>
