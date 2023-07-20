@@ -1,7 +1,7 @@
 INSERT INTO permission(role)
 VALUES
     ('ROLE_ADMIN'),
-    ('ROLE_CLIENT');
+    ('ROLE_USER');
 
 INSERT INTO users (fullname,password,username)
 VALUES

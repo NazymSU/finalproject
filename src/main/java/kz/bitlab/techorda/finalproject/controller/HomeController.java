@@ -1,6 +1,5 @@
 package kz.bitlab.techorda.finalproject.controller;
 
-import kz.bitlab.techorda.finalproject.model.Permission;
 import kz.bitlab.techorda.finalproject.model.User;
 import kz.bitlab.techorda.finalproject.repository.PermissionRepository;
 import kz.bitlab.techorda.finalproject.service.UserService;
@@ -39,19 +38,15 @@ public class HomeController {
 
     @PostMapping(value = "/to-sign-up")
     public String toSignUp(@RequestParam (name = "user_fullname") String fullname,
-                           @RequestParam (name = "birthday") String birthday,
-                           @RequestParam (name = "phone") String phone,
                            @RequestParam (name = "username") String username,
                            @RequestParam (name = "password") String password,
-                           @RequestParam (name = "repeat_password") String repassword){
+                           @RequestParam (name = "repassword") String repassword){
         if(password.equals(repassword)){
             User user = new User();
             user.setFullName(fullname);
-//            user.setBirthday(birthday);
-//            user.setPhone(phone);
             user.setUsername(username);
             user.setPassword(password);
-//            user.setRepassword(repassword);
+            user.setRepassword(repassword);
             User newUser = userService.addUser(user);
             if(newUser!=null){
                 return "redirect:/sign-up-page?success";

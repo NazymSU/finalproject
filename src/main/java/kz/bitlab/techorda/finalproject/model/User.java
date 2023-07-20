@@ -28,20 +28,15 @@ public class User implements UserDetails {
     private Long id;
     @Column(name = "fullname")
     private  String fullName;
-//    @Column(name = "birthday")
-//    private  String birthday;
-//    @Column(name = "phone")
-//    private  String phone;
     @Column(name = "username")
     private  String username;
     @Column(name = "password")
     private  String password;
-//    @Column(name = "repassword")
-//    private  String repassword;
+    @Column(name = "repassword")
+    private  String repassword;
+
     @ManyToMany(fetch = FetchType.EAGER)
     private List<Permission> permissions;
-    @OneToMany
-    private List<Account> accounts;
 
 
     @Override

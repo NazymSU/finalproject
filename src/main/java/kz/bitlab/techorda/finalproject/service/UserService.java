@@ -37,14 +37,14 @@ public class UserService implements UserDetailsService {
         User checkUser=userRepository.findByUsername(user.getUsername());
         if(checkUser==null){
             user.setPassword(passwordEncoder.encode(user.getPassword()));
-//            user.setRepassword(passwordEncoder.encode(user.getRepassword()));
-            Permission clientPermission = permissionRepository.findByRole("ROLE_CLIENT");
-            if (clientPermission == null) {
-                clientPermission = new Permission();
-                clientPermission.setRole("ROLE_CLIENT");
-                clientPermission = permissionRepository.save(clientPermission);
+            user.setRepassword(passwordEncoder.encode(user.getRepassword()));
+            Permission userPermission = permissionRepository.findByRole("ROLE_USER");
+            if (userPermission == null) {
+                userPermission = new Permission();
+                userPermission.setRole("ROLE_USER");
+                userPermission = permissionRepository.save(userPermission);
             }
-            user.getPermissions().add(clientPermission);
+            user.getPermissions().add(userPermission);
             return userRepository.save(user);
         }
         return null;

@@ -1,5 +1,6 @@
 package kz.bitlab.techorda.finalproject.api;
 
+import kz.bitlab.techorda.finalproject.model.Singer;
 import kz.bitlab.techorda.finalproject.model.User;
 import kz.bitlab.techorda.finalproject.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -25,5 +26,6 @@ public class AdminRestController {
     public User updateUser(@RequestBody User user){
         return userService.updateUser(user);
     }
+
 
 }

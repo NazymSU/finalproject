@@ -28,16 +28,6 @@
     </changeSet>
 
 
-    <changeSet id="2023_07_08_create_tables_client" author="nazymkazizmurat">
-        <sqlFile
-                dbms="mysql"
-                endDelimiter=";"
-                path="db/changelog/changes/2023_07_08_create_tables_client.sql"
-                relativeToChangelogFile="false"
-                stripComments="true"
-                splitStatements="true"
-        />
-    </changeSet>
 
 
 
