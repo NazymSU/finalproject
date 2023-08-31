@@ -21,12 +21,15 @@ public class SingerService {
   public SingerDTO addSinger(SingerDTO singerDTO){
       return  singerMapper.toDto(singerRepository.save(singerMapper.toModel(singerDTO)));
   }
+    public SingerDTO getSinger(Long id){
+        Singer singer = singerRepository.findById(id).orElse(null);
+        if (singer != null) {
+            return singerMapper.toDto(singer);
+        }
+        return null;
+    }
 
-  public SingerDTO getSinger(Long id){
-      return  singerMapper.toDto(singerRepository.findById(id).orElse(new Singer()));
-  }
-
-  public  SingerDTO updateSinger(SingerDTO singerDTO){
+    public  SingerDTO updateSinger(SingerDTO singerDTO){
       return  singerMapper.toDto(singerRepository.save(singerMapper.toModel(singerDTO)));
   }
 

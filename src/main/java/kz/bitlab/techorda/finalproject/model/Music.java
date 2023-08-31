@@ -1,10 +1,14 @@
 package kz.bitlab.techorda.finalproject.model;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
-@Table(name = "albums")
-public class Album {
+@Table(name = "musics")
+@Getter
+@Setter
+public class Music {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private  Long id;
@@ -12,5 +16,6 @@ public class Album {
     private  String title;
     @Column(name = "releaseYear")
     private  int releaseYear;
-
+    @ManyToOne
+    private Singer singer;
 }

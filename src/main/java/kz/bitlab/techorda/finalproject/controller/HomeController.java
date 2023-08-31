@@ -35,7 +35,10 @@ public class HomeController {
     public String profilePage(){
         return "profile";
     }
-
+    @GetMapping(value = "/music")
+    public  String musicPage(){
+        return "music";
+    }
     @PostMapping(value = "/to-sign-up")
     public String toSignUp(@RequestParam (name = "user_fullname") String fullname,
                            @RequestParam (name = "username") String username,

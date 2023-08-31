@@ -17,25 +17,29 @@ public class SingerRestController {
 
     @GetMapping
     public List<SingerDTO> singerList(){
+
         return singerService.getSingers();
     }
-    @GetMapping(value = "id")
-    public  SingerDTO getSinger(@PathVariable(name = "id") Long id){
+    @GetMapping("/{id}")
+    public  SingerDTO getSinger(@PathVariable Long id){
         return  singerService.getSinger(id);
     }
+
     @PostMapping
 //    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     public  SingerDTO addSinger(@RequestBody SingerDTO singerDTO){
+
         return singerService.addSinger(singerDTO);
     }
     @PutMapping
 //    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     public SingerDTO updateSinger(@RequestBody SingerDTO singerDTO){
+
         return  singerService.updateSinger(singerDTO);
     }
-    @DeleteMapping(value = "id")
+    @DeleteMapping("/{id}")
 //    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
-    public  void  deleteSinger(@PathVariable(name = "id") Long id){
+    public  void  deleteSinger(@PathVariable Long id){
         singerService.deleteSinger(id);
     }
 }

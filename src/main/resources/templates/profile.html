@@ -1,9 +1,325 @@
 <!DOCTYPE html>
-
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="layout.html" >
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="layout.html"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <div layout:fragment="content">
 
-    <h5>hello <span th:text="${#authentication.principal.fullName}"></span></h5>
+    <div class="mb-3" sec:authorize="hasAnyRole('ROLE_ADMIN')" >
+        <!-- Button trigger modal -->
+        <button  type="button"  class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#addSinger" >
+            + ADD SINGER
+        </button>
+        <div class="modal fade" id="addSinger" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">ADD SINGER</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label class="form-label">NAME</label>
+                            <input type="text" class="form-control" id="name" placeholder=" Insert Singer name">
+
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">COUNTRY</label>
+                            <input type="text" class="form-control" id="country" placeholder="Insert Country">
+                        </div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
+                        <button onclick="addSinger()" type="submit" class="btn btn-outline-success" data-bs-dismiss="modal">ADD SINGER</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="singerDetailsModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">   <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="ModalLabel">Singer Details</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label class="form-label">ID</label>
+                    <input class="form-control" id="singerId" readonly>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">NAME</label>
+                    <input class="form-control" id="singerName" >
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">COUNTRY</label>
+                    <input class="form-control" id="singerCountry" >
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary"  onclick="updateSinger()">UPDATE</button>
+                <button type="button" class="btn btn-outline-danger" onclick="deleteSinger()">DELETE</button>
+            </div>
+        </div>
+    </div>
+    </div>
+
+
+    <!-- Modal -->
+    <div class="modal fade" id="musicDetailsModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">   <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="musicModalLabel">Music Details</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label class="form-label">ID</label>
+                    <input class="form-control" id="musicId" readonly>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">TITLE</label>
+                    <input class="form-control" id="musicTitle" >
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">RELEASE YEAR</label>
+                    <input class="form-control" id="releaseYear" >
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">SINGER</label>
+                    <input class="form-control" id="singer" readonly>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary"  onclick="updateMusic()">UPDATE</button>
+                <button type="button" class="btn btn-outline-danger" onclick="">DELETE</button>
+            </div>
+        </div>
+    </div>
+    </div>
+
+    <div class="container">
+
+        <table class="table table-striped" id="singers-table">
+            <thead>
+            <th>ID</th>
+            <th>NAME</th>
+            <th>COUNTRY</th>
+            <th>DETAILS</th>
+            <th>MUSICS</th>
+            </thead>
+            <tbody id="singers">
+
+            </tbody>
+        </table>
+
+        <table class="table table-striped" style="display: none;" id="songs-table">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>NAME</th>
+                <th>DETAILS</th>
+
+            </tr>
+            </thead>
+            <tbody id="musics">
+
+            </tbody>
+        </table>
+
+
+        <script type="text/javascript">
+            loadSingers()
+
+            let modal = new bootstrap.Modal(document.getElementById("singerDetailsModal"));
+       function loadSingers() {
+           let req = new XMLHttpRequest();
+           req.open("GET","http://localhost:8080/singer")
+           req.send()
+           let result  = ""
+           req.onload=function () {
+               let singers = JSON.parse(req.responseText)
+
+               for (let i = 0; i < singers.length; i++) {
+                   result += "<tr>"
+                   result  += "<td>"+singers[i].id+"</td>"
+                   result  += "<td>"+singers[i].name+"</td>"
+                   result  += "<td>"+singers[i].country+"</td>"
+                   result  += "<td><button onclick='singerDetails("+singers[i].id+")' class='btn btn-outline-success'>DETAILS</button></td>"
+                   result += "<td><button onclick='loadMusics("+singers[i].id+")' class='btn btn-outline-danger' id='show-songs-button'>MUSICS</button></td>";
+                   result  += "</tr>"
+               }
+
+document.getElementById("singers").innerHTML=result
+
+               const singersTable = document.getElementById("singers-table");
+               const songsTable = document.getElementById("songs-table");
+
+               // Отображаем таблицу с данными о певцах
+               singersTable.style.display = "table";
+
+               // Скрываем таблицу с данными о музыке
+               songsTable.style.display = "none";
+
+           }
+       }
+
+       function addSinger() {
+           let singer = {
+               "name": document.getElementById("name").value,
+               "country":document.getElementById("country").value
+           }
+           let req= new XMLHttpRequest();
+           req.onload = function () {
+               loadSingers();
+           }
+           req.open("POST","http://localhost:8080/singer")
+           req.setRequestHeader("Content-type","application/json")
+           req.send(JSON.stringify(singer))
+       }
+
+            function singerDetails(id) {
+                let req = new XMLHttpRequest();
+                req.open("GET", "http://localhost:8080/singer/" + id);
+                req.onload = function () {
+                    if (req.status === 200) {
+                        let singer = JSON.parse(req.responseText);
+                        if (singer != null) {
+                            document.getElementById("singerId").value = singer.id;
+                            document.getElementById("singerName").value = singer.name;
+                            document.getElementById("singerCountry").value = singer.country;
+                            modal = new bootstrap.Modal(document.getElementById("singerDetailsModal"));
+                            modal.show();
+                        }
+                    } else {
+                        console.error("Ошибка при получении данных о певце:", req.statusText);
+                    }
+                };
+                req.onerror = function () {
+                    console.error("Ошибка при выполнении запроса");
+                };
+                req.send();
+            }
+
+            function updateSinger() {
+                let singer = {
+                    "id": document.getElementById("singerId").value,
+                    "name": document.getElementById("singerName").value,
+                    "country": document.getElementById("singerCountry").value
+                };
+                let req = new XMLHttpRequest();
+                req.onload = function () {
+                    if (req.status === 200) {
+                        loadSingers(); // После успешного обновления певца, обновляем список певцов на странице
+                    } else {
+                        console.error("Ошибка при обновлении данных о певце:", req.statusText);
+                    }
+                };
+                req.onerror = function () {
+                    console.error("Ошибка при выполнении запроса");
+                };
+                req.open("PUT", "http://localhost:8080/singer");
+                req.setRequestHeader("Content-type", "application/json");
+                req.send(JSON.stringify(singer));
+            }
+
+            function deleteSinger() {
+                let approve = confirm("Are you sure?")
+                if(approve){
+
+                    let singerId=document.getElementById("singerId");
+                    let   httpRequest = new XMLHttpRequest();
+                    httpRequest.open("DELETE", "http://localhost:8080/singer/"+singerId.value,true);
+
+                    httpRequest.onreadystatechange = function () {
+                        if(httpRequest.readyState == XMLHttpRequest.DONE && httpRequest.status == 200){
+                            modal.hide();
+                            loadSingers();
+                        }
+                    }
+                    httpRequest.send();
+                }
+            }
+
+
+
+
+            function loadMusics(singerId) {
+                let req = new XMLHttpRequest();
+                req.open("GET", "http://localhost:8080/music/singer/" + singerId);
+                req.send();
+                let table = "<table>";
+                req.onload = function () {
+                    let musics = JSON.parse(req.responseText);
+
+                    for (let i = 0; i < musics.length; i++) {
+
+                        table += "<tr>";
+                        table += "<td>" + musics[i].id + "</td>";
+                        table += "<td>" + musics[i].title + "</td>";
+                        table  += "<td><button onclick='musicDetails("+musics[i].id+")' class='btn btn-outline-success'>DETAILS</button></td>"
+                        table += "</tr>";
+                    }
+
+                    table += "</table>";
+
+                    const singersTable = document.getElementById("singers-table");
+                    const songsTable = document.getElementById("songs-table");
+
+                    // Скрываем таблицу с данными о певцах
+                    singersTable.style.display = "none";
+
+                    // Отображаем таблицу с данными о музыке
+                    songsTable.style.display = "table";
+
+
+                    document.getElementById("musics").innerHTML = table;
+                    document.getElementById("show-songs-button").addEventListener("click", function() {
+                        const songsTable = document.getElementById("songs-table2");
+                        if (songsTable.style.display === "none") {
+                            songsTable.style.display = "table";
+                        } else {
+                            songsTable.style.display = "none";
+                        }
+                    });
+
+                }
+            }
+
+            function musicDetails(musicId) {
+                let req = new XMLHttpRequest();
+                req.open("GET", "http://localhost:8080/music/" + musicId);
+                req.onload = function () {
+                    if (req.status === 200) {
+                        let music = JSON.parse(req.responseText);
+                        if (music != null) {
+                            document.getElementById("musicId").value = music.id;
+                            document.getElementById("musicTitle").value = music.title;
+                            document.getElementById("releaseYear").value=music.releaseYear;
+                            document.getElementById("singer").value=music.singer.name;
+                            modal = new bootstrap.Modal(document.getElementById("musicDetailsModal"));
+                            modal.show();
+                        }
+                    } else {
+                        console.error("Ошибка при получении данных о музыке:", req.statusText);
+                    }
+                };
+                req.onerror = function () {
+                    console.error("Ошибка при выполнении запроса");
+                };
+                req.send();
+            }
+
+
+
+        </script>
+
+
+
+
+    </div>
+
 </div>
 </html>
